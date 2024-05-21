@@ -20,10 +20,15 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -34,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.example.solidnote.ui.present.navigate.Screens
+import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -41,8 +47,12 @@ import com.example.solidnote.ui.present.navigate.Screens
 
 fun HomeScreen(navControl: NavHostController, viewModel: HomeVM = hiltViewModel()) {
     val solidNotes = viewModel.notes.collectAsState(initial = emptyList())
+    val snackbarState = remember{
+        SnackbarHostState()
+    }
+    val scope = rememberCoroutineScope()
 
-    Scaffold(
+    Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarState) },
         topBar = {
             TopAppBar(title = {Text(text = "Solid Notes")})
         }, floatingActionButton = { FloatingActionButton(onClick = {
@@ -64,7 +74,12 @@ fun HomeScreen(navControl: NavHostController, viewModel: HomeVM = hiltViewModel(
                                 Icon(imageVector= Icons.Default.Edit, contentDescription = "")
                             }
                             IconButton(onClick = {
+
                                 viewModel.deleteSolidNote(note = it)
+                                scope.launch {
+                                    snackbarState.showSnackbar("Note has been deleted", actionLabel = "ok", duration = SnackbarDuration.Short)
+
+                                }
                             }){
                                 Icon(imageVector= Icons.Default.Delete, contentDescription = "")
                             }

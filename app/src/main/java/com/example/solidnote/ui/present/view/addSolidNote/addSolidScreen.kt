@@ -13,6 +13,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,12 +22,19 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavHostController
 import com.example.solidnote.ui.present.navigate.Screens
+import com.example.solidnote.ui.present.view.homeScreen.HomeVM
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 
 fun addSolidScreen(navControl: NavHostController, viewModel: AddVM= hiltViewModel()) {
-    Scaffold(topBar = { TopAppBar(navigationIcon = {
+    val snackbarState = remember{
+        SnackbarHostState()
+    }
+    val scope = rememberCoroutineScope()
+    Scaffold(snackbarHost = { SnackbarHost(hostState = snackbarState)}, topBar = { TopAppBar(navigationIcon = {
                                                    IconButton(onClick = { navControl.popBackStack()}) {
                                                        Icon(imageVector = Icons.Default.ArrowBack,contentDescription = "")
                                                    }
@@ -56,7 +65,13 @@ fun addSolidScreen(navControl: NavHostController, viewModel: AddVM= hiltViewMode
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     viewModel.addSolidNote()
-                    navControl.popBackStack()
+                    scope.launch {
+                        snackbarState.showSnackbar("Note has been created", actionLabel = "ok", duration = SnackbarDuration.Short)
+                        navControl.popBackStack()
+
+                    }
+
+
                 }){
                 Text(text = "Add Solid Note")
             }
