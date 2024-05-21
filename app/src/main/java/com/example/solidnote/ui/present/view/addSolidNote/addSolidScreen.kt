@@ -16,14 +16,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
+import androidx.navigation.NavHostController
+import com.example.solidnote.ui.present.navigate.Screens
 
 @OptIn(ExperimentalMaterial3Api::class)
-@Preview(showSystemUi = true, showBackground = true)
 @Composable
 
-fun addSolidScreen(){
+fun addSolidScreen(navControl: NavHostController, viewModel: AddVM= hiltViewModel()) {
     Scaffold(topBar = { TopAppBar(navigationIcon = {
-                                                   IconButton(onClick = { /*TODO*/ }) {
+                                                   IconButton(onClick = { navControl.popBackStack()}) {
                                                        Icon(imageVector = Icons.Default.ArrowBack,contentDescription = "")
                                                    }
     }, title = { Text(text = "New solid note")})}){
@@ -34,24 +37,27 @@ fun addSolidScreen(){
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 label = {Text(text = "Title")},
-                value = "",
+                value = viewModel.title,
                 onValueChange = {
-
+                    viewModel.title=it
                 }
             )
             Spacer(modifier = Modifier.height(8.dp))
             OutlinedTextField(
                 modifier = Modifier.fillMaxWidth(),
                 label = {Text(text = "Content")},
-                value = "",
+                value = viewModel.content,
                 onValueChange = {
-
+                    viewModel.content = it
                 }
             )
             Spacer(modifier = Modifier.height(16.dp))
             Button(
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {}){
+                onClick = {
+                    viewModel.addSolidNote()
+                    navControl.popBackStack()
+                }){
                 Text(text = "Add Solid Note")
             }
         }
