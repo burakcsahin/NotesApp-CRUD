@@ -91,7 +91,7 @@ fun HomeScreen(navControl: NavHostController, viewModel: HomeVM = hiltViewModel(
         //Spacer(modifier = Modifier.height(12.dp))
 
 
-        LazyColumn(modifier = Modifier.padding(vertical = 150.dp)) {
+        LazyColumn(modifier = Modifier.padding(top = 150.dp)) {
             items(solidNotes.value.filter { it.title.contains(title, ignoreCase = true) }) {
                 Box(
                     modifier = Modifier
