@@ -1,5 +1,7 @@
 package com.example.solidnote.ui.present.view.addSolidNote
 
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -30,6 +33,7 @@ import kotlinx.coroutines.launch
 @Composable
 
 fun addSolidScreen(navControl: NavHostController, viewModel: AddVM= hiltViewModel()) {
+    val keyBoardController = LocalSoftwareKeyboardController.current
     val snackbarState = remember{
         SnackbarHostState()
     }
@@ -65,12 +69,12 @@ fun addSolidScreen(navControl: NavHostController, viewModel: AddVM= hiltViewMode
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     viewModel.addSolidNote()
+                    keyBoardController?.hide()
                     scope.launch {
                         snackbarState.showSnackbar("Note has been created", actionLabel = "ok", duration = SnackbarDuration.Short)
                         navControl.popBackStack()
 
                     }
-
 
                 }){
                 Text(text = "Add Solid Note")

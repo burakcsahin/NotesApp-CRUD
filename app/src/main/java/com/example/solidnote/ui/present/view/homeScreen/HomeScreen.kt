@@ -78,19 +78,21 @@ fun HomeScreen(navControl: NavHostController, viewModel: HomeVM = hiltViewModel(
             .verticalScroll(rememberScrollState())
             .padding(16.dp)) {
             OutlinedTextField(
-                modifier = Modifier.padding(12.dp),
-                label = { Text(text = "Title") },
+                modifier = Modifier.fillMaxWidth(),
+                label = { Text(text = "Search") },
                 value = title,
                 onValueChange = {
                     title = it
-                }
+                },
+                placeholder = { Text(text = "Type to search title") }
+
             )
         }
         //Spacer(modifier = Modifier.height(12.dp))
 
 
         LazyColumn(modifier = Modifier.padding(vertical = 150.dp)) {
-            items(solidNotes.value.filter { it.title.contains(title) }) {
+            items(solidNotes.value.filter { it.title.contains(title, ignoreCase = true) }) {
                 Box(
                     modifier = Modifier
                         .padding(16.dp)

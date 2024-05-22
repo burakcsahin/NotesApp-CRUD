@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -35,6 +36,7 @@ import kotlinx.coroutines.launch
 @Composable
 
 fun updateSolidScreen(navControl: NavHostController, viewModel: UpdateVM = hiltViewModel()) {
+    val keyBoardController = LocalSoftwareKeyboardController.current
     val snackbarState = remember{
         SnackbarHostState()
     }
@@ -72,6 +74,7 @@ fun updateSolidScreen(navControl: NavHostController, viewModel: UpdateVM = hiltV
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
                     viewModel.updateNota()
+                    keyBoardController?.hide()
                     scope.launch {
                         snackbarState.showSnackbar("Note has been updated", actionLabel = "ok", duration = SnackbarDuration.Short)
                         navControl.popBackStack()
