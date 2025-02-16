@@ -1,1 +1,1 @@
-2nd Assignment for Koc University Course: COMP319A Android Development
+3rd Assignment for Koc University Course: COMP319A Android Development
